@@ -4,42 +4,42 @@
 import Foundation
 import SwiftUI
 
-final class Router<Screen: Hashable, Sheet: Hashable, FullScreenCover: Hashable>: RouterProtocol, ObservableObject {
+public final class Router<Screen: Hashable, Sheet: Hashable, FullScreenCover: Hashable>: RouterProtocol, ObservableObject {
     @Published var path: NavigationPath = NavigationPath()
     @Published var sheet: RouteSheet<Sheet>?
     @Published var fullScreenCover: RouteFullScreenCover<FullScreenCover>?
     
-    func push(
+    public func push(
         route: RouteScreen<Screen>
     ) -> Void {
         path.append(route)
     }
     
-    func push(
+    public func push(
         route: RouteSheet<Sheet>
     ) -> Void {
         self.sheet = route
     }
     
-    func push(
+    public func push(
         route: RouteFullScreenCover<FullScreenCover>
     ) -> Void {
         self.fullScreenCover = route
     }
     
-    func pop() -> Void {
+    public func pop() -> Void {
         path.removeLast()
     }
     
-    func popRoot() -> Void {
+    public func popRoot() -> Void {
         path.removeLast(path.count)
     }
     
-    func dismissSheet() -> Void  {
+    public func dismissSheet() -> Void  {
         self.sheet = nil
     }
     
-    func dismissFullScreenCover() -> Void {
+    public func dismissFullScreenCover() -> Void {
         self.fullScreenCover = nil
     }
 }

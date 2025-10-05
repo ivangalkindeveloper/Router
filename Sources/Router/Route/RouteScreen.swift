@@ -5,7 +5,7 @@
 //  Created by Иван Галкин on 05.10.2025.
 //
 
-struct RouteScreen<T: Hashable>: Route {
+public struct RouteScreen<T: Hashable>: Route {
     init(
         _ type: T,
         _ arguments: (any RouteArgumentsProtocol)? = nil
@@ -15,7 +15,7 @@ struct RouteScreen<T: Hashable>: Route {
         self.arguments = arguments
     }
 
-    let id: Int
-    let type: T
-    let arguments: (any RouteArgumentsProtocol)?
+    public let id: Int
+    public let type: T
+    public let arguments: (any RouteArgumentsProtocol)?
 }

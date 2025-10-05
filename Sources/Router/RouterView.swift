@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(macOS, unavailable)
-struct RouterView<
+public struct RouterView<
     Screen: Hashable,
     Sheet: Hashable,
     FullScreenCover: Hashable,
@@ -19,7 +19,7 @@ struct RouterView<
     var builder: B
     let initialRouteScreen: RouteScreen<Screen>
     
-    var body: some View {
+    public var body: some View {
         NavigationStack(
             path: $router.path
         ) {

@@ -5,7 +5,7 @@
 //  Created by Иван Галкин on 05.10.2025.
 //
 
-protocol Route: Hashable, Identifiable {
+public protocol Route: Hashable, Identifiable {
     associatedtype T: Hashable
 
     var id: Int { get }
@@ -14,11 +14,11 @@ protocol Route: Hashable, Identifiable {
 }
 
 extension Route {
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id && lhs.type == rhs.type
     }
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(type)
     }
 }
