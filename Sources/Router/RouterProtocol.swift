@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-protocol RouterProtocol {
+public protocol RouterProtocol {
     associatedtype Screen: Hashable
     associatedtype Sheet: Hashable
     associatedtype FullScreenCover: Hashable

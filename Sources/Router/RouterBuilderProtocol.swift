@@ -11,13 +11,11 @@ public protocol RouterBuilderProtocol {
         associatedtype Screen: Hashable
         associatedtype Sheet: Hashable
         associatedtype FullScreenCover: Hashable
+        associatedtype Content: View
     
-        @ViewBuilder
-        func build(route: RouteScreen<Screen>) -> AnyView
+        func build(route: RouteScreen<Screen>) -> Content
     
-        @ViewBuilder
-        func build(route: RouteSheet<Sheet>) -> AnyView
+        func build(route: RouteSheet<Sheet>) -> Content
     
-        @ViewBuilder
-        func build(route: RouteFullScreenCover<FullScreenCover>) -> AnyView
+        func build(route: RouteFullScreenCover<FullScreenCover>) -> Content
 }

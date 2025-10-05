@@ -6,9 +6,9 @@
 //
 
 public struct RouteFullScreenCover<T: Hashable>: Route {
-    init(
-        _ type: T,
-        _ arguments: (any RouteArgumentsProtocol)? = nil
+    public init(
+        type: T,
+        arguments: (any RouteArgumentsProtocol)? = nil
     ) {
         self.id = type.hashValue
         self.type = type

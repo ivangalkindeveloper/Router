@@ -5,9 +5,9 @@ import Foundation
 import SwiftUI
 
 public final class Router<Screen: Hashable, Sheet: Hashable, FullScreenCover: Hashable>: RouterProtocol, ObservableObject {
-    @Published var path: NavigationPath = NavigationPath()
-    @Published var sheet: RouteSheet<Sheet>?
-    @Published var fullScreenCover: RouteFullScreenCover<FullScreenCover>?
+    @Published public var path: NavigationPath = NavigationPath()
+    @Published public var sheet: RouteSheet<Sheet>?
+    @Published public var fullScreenCover: RouteFullScreenCover<FullScreenCover>?
     
     public func push(
         route: RouteScreen<Screen>
