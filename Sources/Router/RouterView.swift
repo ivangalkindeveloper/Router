@@ -14,7 +14,7 @@ public struct RouterView<
     FullScreenCover: Hashable,
     B: RouterBuilderProtocol>
 : View where B.Screen == Screen, B.Sheet == Sheet, B.FullScreenCover == FullScreenCover {
-    init(
+    public init(
         builder: B,
         initialRouteScreen: RouteScreen<Screen>
     ) {
@@ -22,9 +22,9 @@ public struct RouterView<
         self.initialRouteScreen = initialRouteScreen
     }
     
-    @StateObject var router: Router<Screen, Sheet, FullScreenCover> = Router()
-    var builder: B
-    let initialRouteScreen: RouteScreen<Screen>
+    @StateObject public var router: Router<Screen, Sheet, FullScreenCover> = Router()
+    public var builder: B
+    public let initialRouteScreen: RouteScreen<Screen>
     
     public var body: some View {
         NavigationStack(
