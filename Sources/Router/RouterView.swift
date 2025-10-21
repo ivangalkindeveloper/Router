@@ -14,24 +14,29 @@ public struct RouterView<
     FullScreenCover: Hashable,
     B: RouterBuilderProtocol>
 : View where B.Screen == Screen, B.Sheet == Sheet, B.FullScreenCover == FullScreenCover {
+    @StateObject var router: Router<Screen, Sheet, FullScreenCover>
+    public var builder: B
+    public let initialRouteScreen: RouteScreen<Screen>
+    
     public init(
         builder: B,
         initialRouteScreen: RouteScreen<Screen>
     ) {
         self.builder = builder
         self.initialRouteScreen = initialRouteScreen
+        self._router = StateObject(
+            wrappedValue: Router<Screen, Sheet, FullScreenCover>(
+                initialRoute: initialRouteScreen
+            )
+        )
     }
-    
-    @StateObject public var router: Router<Screen, Sheet, FullScreenCover> = Router()
-    public var builder: B
-    public let initialRouteScreen: RouteScreen<Screen>
     
     public var body: some View {
         NavigationStack(
             path: $router.path
         ) {
             builder.build(
-                route: initialRouteScreen
+                route: router.rootRoute
             ).navigationDestination(
                 for: RouteScreen<Screen>.self
             ) { route in

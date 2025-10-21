@@ -8,11 +8,24 @@ public final class Router<Screen: Hashable, Sheet: Hashable, FullScreenCover: Ha
     @Published public var path: NavigationPath = NavigationPath()
     @Published public var sheet: RouteSheet<Sheet>?
     @Published public var fullScreenCover: RouteFullScreenCover<FullScreenCover>?
+    @Published var rootRoute: RouteScreen<Screen>
+    
+    public init(
+        initialRoute: RouteScreen<Screen>,
+    ) {
+        self.rootRoute = initialRoute
+    }
     
     public func push(
         route: RouteScreen<Screen>
     ) -> Void {
-        path.append(route)
+        self.path.append(route)
+    }
+    
+    public func root(
+        route: RouteScreen<Screen>
+    ) -> Void {
+        self.rootRoute = route
     }
     
     public func push(
@@ -28,11 +41,11 @@ public final class Router<Screen: Hashable, Sheet: Hashable, FullScreenCover: Ha
     }
     
     public func pop() -> Void {
-        path.removeLast()
+        self.path.removeLast()
     }
     
     public func popRoot() -> Void {
-        path.removeLast(path.count)
+        self.path.removeLast(path.count)
     }
     
     public func dismissSheet() -> Void  {

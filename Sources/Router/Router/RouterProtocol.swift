@@ -20,6 +20,10 @@ public protocol RouterProtocol {
         route: RouteScreen<Screen>
     ) -> Void
     
+    func root(
+        route: RouteScreen<Screen>
+    ) -> Void
+    
     func push(
         route: RouteSheet<Sheet>
     ) -> Void
