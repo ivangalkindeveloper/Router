@@ -22,12 +22,12 @@ Add `mavenLocal()` to your application's repositories, alongside `google()` and 
 
 ```kotlin
 dependencies {
-    implementation("io.ivangalkindeveloper:router-compose:1.0.0")
+    implementation("io.ivangalkindeveloper:router-compose:2.0.0")
     // The router model is included transitively.
 }
 ```
 
-Enable `buildFeatures { compose = true }` and the Kotlin Compose compiler plugin matching your Kotlin version. To use the model without Compose, depend on `io.ivangalkindeveloper:router:1.0.0` instead.
+Enable `buildFeatures { compose = true }` and the Kotlin Compose compiler plugin matching your Kotlin version. To use the model without Compose, depend on `io.ivangalkindeveloper:router:2.0.0` instead.
 
 Source integration is available through `includeBuild("/absolute/path/to/Router/kotlin")` in the application's `settings.gradle.kts`, using the same coordinates. Remote Maven publishing requires separate repository and credential configuration.
 

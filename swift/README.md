@@ -9,7 +9,7 @@ Router provides typed screen navigation, sheets, full-screen covers, route argum
 Requires Swift 6.1+. The navigation model supports iOS 16+ and macOS 13+; `RouterView` is explicitly unavailable on macOS. Build the SwiftUI host for iOS.
 
 ```swift
-.package(url: "https://github.com/ivangalkindeveloper/Router.git", branch: "master")
+.package(url: "https://github.com/ivangalkindeveloper/Router.git", from: "2.0.0")
 ```
 
 The repository root and `swift/` both contain a Swift Package Manager manifest. Open either in Xcode and select an iOS Simulator. From this directory:
