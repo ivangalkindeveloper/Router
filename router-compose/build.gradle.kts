@@ -21,7 +21,7 @@ kotlin {
 
 dependencies {
     testImplementation("androidx.test.espresso:espresso-core:3.7.0")
-    implementation(platform("androidx.compose:compose-bom:2025.09.01"))
+    api(platform("androidx.compose:compose-bom:2025.09.01"))
     implementation("androidx.compose.material3:material3")
     implementation("androidx.activity:activity-compose:1.11.0")
     api(project(":router"))
