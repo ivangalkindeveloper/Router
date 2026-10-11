@@ -1,5 +1,7 @@
 # Router для Kotlin / Android
 
+Эта реализация находится в общем репозитории Router. [Обзор проекта и Swift-версия](../README.md). Все команды ниже выполняются из каталога `kotlin/`; открывайте его в Android Studio.
+
 Порт Swift-пакета `Router`: типизированные `RouteScreen`, `RouteSheet`, `RouteFullScreenCover`, аргументы маршрута, стек экранов, смена корня и закрытие модальных окон. Android-аналог `RouterView` реализован на Jetpack Compose.
 
 Модули:
@@ -27,7 +29,7 @@ dependencies {
 
 В приложении должны быть включены `buildFeatures { compose = true }` и Kotlin Compose compiler plugin той же версии, что и Kotlin. Для использования модели без Compose достаточно зависимости `io.ivangalkindeveloper:router:1.0.0`.
 
-Исходники можно подключить через `includeBuild("/absolute/path/to/KotlinGitHub/Router")` вместо локальной публикации, сохранив эти строки зависимостей.
+Исходники можно подключить через `includeBuild("/absolute/path/to/Router/kotlin")` вместо локальной публикации, сохранив эти строки зависимостей.
 
 ## Маршруты
 
@@ -106,13 +108,8 @@ ViewModel сохраняет модель при изменениях конфи
 
 Тесты JVM проверяют операции со стеком, аргументы, equality, дубликаты, неизменяемость snapshots и одновременные push. Compose-тесты на Robolectric проверяют сохранение состояния экрана, повторные маршруты и показ/закрытие обоих типов модальных окон. GitHub Actions выполняет сборку, тесты и Android Lint.
 
-## Отправка на GitHub
+## Репозиторий и публикация
 
-Создайте пустой репозиторий, например `kotlin-router`:
+Swift- и Kotlin-реализации размещаются в одном репозитории; Git-команды выполняйте из его корня. Общие GitHub Actions находятся в `../.github/`.
 
-```sh
-git remote add origin git@github.com:YOUR_USERNAME/kotlin-router.git
-git push -u origin main
-```
-
-Maven-публикации обоих модулей уже настроены для `publishToMavenLocal`. Адрес и credentials удалённого Maven-репозитория настраиваются отдельно.
+Maven-публикации настроены для `publishToMavenLocal`. Адрес и credentials удалённого Maven-репозитория настраиваются отдельно.
