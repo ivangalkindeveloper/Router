@@ -27,7 +27,7 @@ dependencies {
 
 В приложении должны быть включены `buildFeatures { compose = true }` и Kotlin Compose compiler plugin той же версии, что и Kotlin. Для использования модели без Compose достаточно зависимости `io.github.ivangalkindeveloper:router:1.0.0`.
 
-Исходники можно подключить через `includeBuild("/absolute/path/to/Kotlin/Router")` вместо локальной публикации, сохранив эти строки зависимостей.
+Исходники можно подключить через `includeBuild("/absolute/path/to/KotlinGitHub/Router")` вместо локальной публикации, сохранив эти строки зависимостей.
 
 ## Маршруты
 
