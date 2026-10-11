@@ -1,11 +1,11 @@
 plugins { id("com.android.application"); kotlin("android"); kotlin("plugin.compose") }
 
 android {
-    namespace = "io.github.ivangalkindeveloper.router.sample"
+    namespace = "io.ivangalkindeveloper.router.sample"
     compileSdk = 36
     defaultConfig {
         minSdk = 23
-        applicationId = "io.github.ivangalkindeveloper.router.sample"
+        applicationId = "io.ivangalkindeveloper.router.sample"
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

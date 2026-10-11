@@ -1,4 +1,4 @@
-package io.github.ivangalkindeveloper.router.compose
+package io.ivangalkindeveloper.router.compose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
@@ -9,7 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.espresso.Espresso
-import io.github.ivangalkindeveloper.router.*
+import io.ivangalkindeveloper.router.*
 import kotlin.test.assertSame
 import org.junit.Rule
 import org.junit.Test

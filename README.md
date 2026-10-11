@@ -20,12 +20,12 @@ JDK 17, Android SDK 36, Build Tools 35.0.0, Android API 23+. Версии: Gradl
 
 ```kotlin
 dependencies {
-    implementation("io.github.ivangalkindeveloper:router-compose:1.0.0")
+    implementation("io.ivangalkindeveloper:router-compose:1.0.0")
     // router подключается транзитивно.
 }
 ```
 
-В приложении должны быть включены `buildFeatures { compose = true }` и Kotlin Compose compiler plugin той же версии, что и Kotlin. Для использования модели без Compose достаточно зависимости `io.github.ivangalkindeveloper:router:1.0.0`.
+В приложении должны быть включены `buildFeatures { compose = true }` и Kotlin Compose compiler plugin той же версии, что и Kotlin. Для использования модели без Compose достаточно зависимости `io.ivangalkindeveloper:router:1.0.0`.
 
 Исходники можно подключить через `includeBuild("/absolute/path/to/KotlinGitHub/Router")` вместо локальной публикации, сохранив эти строки зависимостей.
 

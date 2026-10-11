@@ -1,4 +1,4 @@
-package io.github.ivangalkindeveloper.router
+package io.ivangalkindeveloper.router
 
 import kotlin.test.*
 import kotlinx.coroutines.*

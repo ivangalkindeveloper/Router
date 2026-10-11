@@ -1,4 +1,4 @@
-package io.github.ivangalkindeveloper.router.sample
+package io.ivangalkindeveloper.router.sample
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.ivangalkindeveloper.router.*
-import io.github.ivangalkindeveloper.router.compose.*
+import io.ivangalkindeveloper.router.*
+import io.ivangalkindeveloper.router.compose.*
 
 enum class Screen { HOME, PROFILE }
 enum class Sheet { FILTERS }

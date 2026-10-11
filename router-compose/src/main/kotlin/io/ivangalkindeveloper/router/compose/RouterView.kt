@@ -1,4 +1,4 @@
-package io.github.ivangalkindeveloper.router.compose
+package io.ivangalkindeveloper.router.compose
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.ivangalkindeveloper.router.*
+import io.ivangalkindeveloper.router.*
 
 interface RouterBuilderProtocol<Screen : Any, Sheet : Any, FullScreenCover : Any> {
     @Composable fun build(route: RouteScreen<Screen>)

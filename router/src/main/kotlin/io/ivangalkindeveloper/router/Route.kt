@@ -1,4 +1,4 @@
-package io.github.ivangalkindeveloper.router
+package io.ivangalkindeveloper.router
 
 /** Marker for typed payloads, equivalent to the Swift RouteArgumentsProtocol. */
 interface RouteArgumentsProtocol

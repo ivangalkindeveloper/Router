@@ -1,7 +1,7 @@
 plugins { id("com.android.library"); kotlin("android"); kotlin("plugin.compose"); `maven-publish` }
 
 android {
-    namespace = "io.github.ivangalkindeveloper.router.compose"
+    namespace = "io.ivangalkindeveloper.router.compose"
     compileSdk = 36
     defaultConfig {
         minSdk = 23

@@ -1,4 +1,4 @@
-package io.github.ivangalkindeveloper.router
+package io.ivangalkindeveloper.router
 
 import java.util.Collections
 import java.util.UUID
