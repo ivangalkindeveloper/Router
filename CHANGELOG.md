@@ -14,6 +14,7 @@ This major release combines the SwiftUI and Kotlin / Android implementations in 
 - Align the Swift release tag, both Kotlin library versions, and Android sample version at `2.0.0`.
 - Provide English platform usage guides and a root README focused on platform differences.
 - Add GitHub Actions checks for Kotlin / Android and Swift, including an iOS Simulator build.
+- Configure Android SDK setup to install `platform-tools` without requesting the removed `tools` package.
 
 ### Migration
 
