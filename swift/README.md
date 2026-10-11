@@ -1,6 +1,8 @@
 # Router for Swift
 
-The Swift implementation of Router provides typed screen navigation, sheets, full-screen covers, route arguments and a SwiftUI host. See the [project overview and Kotlin version](../README.md) for platform differences.
+Router provides typed screen navigation, sheets, full-screen covers, route arguments, and a SwiftUI host.
+
+[Platform comparison](../README.md).
 
 ## Installation and build
 

@@ -1,70 +1,24 @@
-# Router
+# Router — platform differences
 
-Router предоставляет типизированную навигацию: стек экранов, аргументы маршрутов, смену корневого экрана, sheet и полноэкранные модальные окна. `RouterView` связывает модель навигации с интерфейсом приложения.
+The Swift implementation binds navigation to SwiftUI. The Kotlin implementation separates a JVM navigation model from an Android Jetpack Compose host.
 
-В одном репозитории находятся самостоятельные реализации для SwiftUI и Android / Jetpack Compose:
-
-| | Swift | Kotlin |
+| Aspect | Swift / SwiftUI | Kotlin / Android |
 |---|---|---|
-| Исходники и документация | [swift/](swift/) · [Swift README](swift/README.md) | [kotlin/](kotlin/) · [Kotlin README](kotlin/README.md) |
-| Платформы | Модель: iOS 16+, macOS 13+; SwiftUI host: iOS | JVM-модель; Compose-модуль для Android API 23+ |
-| Инструменты сборки | Swift 6.1+, Swift Package Manager / Xcode | JDK 17, Gradle Wrapper, Android SDK 36 |
-| Модель | `NavigationPath`, `ObservableObject`, `@Published` | `StateFlow<RouterState<...>>` |
-| Интерфейс | SwiftUI `NavigationStack` и `RouterView` | Jetpack Compose `RouterView` |
-| Модальные окна | `.sheet`, `.fullScreenCover` | Material 3 `ModalBottomSheet`, полноэкранный `Dialog` |
-| Доступ к router в UI | `environmentObject` | `LocalRouter`, `currentRouter` |
-| Модуль / namespace | `Router` | `io.ivangalkindeveloper.router`, `.router.compose` |
+| Implementation and usage | [swift/README.md](swift/README.md) | [kotlin/README.md](kotlin/README.md) |
+| Package / namespace | `Router` | `io.ivangalkindeveloper.router` and `.router.compose` |
+| Platforms | Model: iOS 16+, macOS 13+; UI host: iOS | JVM model; Compose host: Android API 23+ |
+| Build requirements | Swift 6.1+, Swift Package Manager / Xcode | JDK 17, Gradle; Android SDK for the Compose module |
+| Navigation state | `NavigationPath`, `ObservableObject`, `@Published` | Immutable `RouterState` snapshots exposed through `StateFlow` |
+| UI host | SwiftUI `NavigationStack` and `RouterView` | Jetpack Compose `RouterView` |
+| Sheet | SwiftUI `.sheet` | Material 3 `ModalBottomSheet` |
+| Full-screen presentation | SwiftUI `.fullScreenCover` | Full-screen Compose `Dialog` |
+| Access from child views | `environmentObject` | `LocalRouter` / `currentRouter` |
+| Model ownership | Host-owned `StateObject` | Caller-owned model, typically in a `ViewModel`; an optional remembered model is also available |
+| Back navigation | Native SwiftUI navigation behavior | Android Back closes full-screen presentation, sheet, then the top screen |
+| Empty-stack `pop` | Caller must check that the path is non-empty | Safely does nothing |
+| Screen state | Managed by SwiftUI | Unique entry keys and retained `rememberSaveable` state; ordinary `remember` state is recreated on return |
+| Transitions | Native SwiftUI transitions | Standard modal animations; screen transition animations and predictive back are not implemented |
 
-Сохраняются `RouteScreen`, `RouteSheet`, `RouteFullScreenCover`, аргументы и операции `push`, `pop`, `popRoot`, `root`, `dismissSheet`, `dismissFullScreenCover`. В обеих реализациях `root(route)` меняет корневой экран, сохраняя стек и открытые модальные окна. Для полного сброса дополнительно вызовите `popRoot()` и методы закрытия модальных окон.
+The current Swift `RouterView` is explicitly unavailable on macOS even though the navigation model supports macOS. The Android host requires Compose; the Kotlin model can be used without it.
 
-Android-реализация обрабатывает Back, хранит отдельный ключ каждой записи стека и сохраняет `rememberSaveable` экранов. Стек рекомендуется хранить в `ViewModel`; восстановление после смерти процесса требует сериализации со стороны приложения. Анимации переходов между экранами и predictive back в Kotlin-порте пока не реализованы. SwiftUI сам предоставляет нативные переходы; текущий Swift `RouterView` явно недоступен на macOS, поэтому для проверки UI используется iOS Simulator.
-
-## Swift
-
-Подключение через Swift Package Manager:
-
-```swift
-.package(
-    url: "https://github.com/ivangalkindeveloper/Router.git",
-    branch: "master"
-)
-```
-
-Корневой `Package.swift` указывает на `swift/Sources` и `swift/Tests` и сохраняет подключение по прежнему URL. В `swift/` находится самостоятельный Swift-пакет. Откройте корень или `swift/` в Xcode и выберите iOS Simulator. Сборка из корня:
-
-```sh
-xcodebuild -scheme Router \
-  -destination 'generic/platform=iOS Simulator' \
-  -derivedDataPath .build/ios \
-  CODE_SIGNING_ALLOWED=NO build
-```
-
-Описание маршрутов, builder и примеры SwiftUI — в [swift/README.md](swift/README.md).
-
-## Kotlin / Android
-
-Откройте `kotlin/` в Android Studio. Модули: `router` — JVM-модель, `router-compose` — Android UI, `sample` — запускаемый пример.
-
-```sh
-cd kotlin
-./gradlew test assembleDebug lintDebug publishToMavenLocal
-```
-
-Android SDK задаётся через `ANDROID_HOME` или `kotlin/local.properties`. После локальной публикации добавьте `mavenLocal()` в repositories приложения:
-
-```kotlin
-implementation("io.ivangalkindeveloper:router-compose:1.0.0")
-// Только модель навигации без Compose:
-// implementation("io.ivangalkindeveloper:router:1.0.0")
-```
-
-Альтернатива — `includeBuild("/absolute/path/to/Router/kotlin")` в `settings.gradle.kts` приложения. Настройка Compose, builder, ограничения и пример — в [kotlin/README.md](kotlin/README.md). Публикация в удалённый Maven-репозиторий настраивается отдельно.
-
-## Структура и проверки
-
-- `swift/` — Swift Package, маршруты, SwiftUI host, тесты и документация.
-- `kotlin/` — Gradle-проект, модель навигации, Compose host, Android-пример и тесты.
-- `Package.swift` — вход для Swift Package Manager из корня репозитория.
-- `.github/` — общие GitHub Actions; Kotlin-команды выполняются в `kotlin/`.
-
-Реализации собираются независимо. Истории коммитов объединены без переписывания существующей Swift-истории. Kotlin-тесты проверяют модель и поведение Compose; Swift UI собирается для iOS Simulator.
+Keeping the Kotlin model in a `ViewModel` preserves it across configuration changes. Restoring arbitrary route types and arguments after process death requires application-defined serialization. See each implementation's README for its own navigation API and usage.

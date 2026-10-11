@@ -1,39 +1,41 @@
-# Router для Kotlin / Android
+# Router for Kotlin / Android
 
-Эта реализация находится в общем репозитории Router. [Обзор проекта и Swift-версия](../README.md). Все команды ниже выполняются из каталога `kotlin/`; открывайте его в Android Studio.
+Typed screen navigation, route arguments, sheets, full-screen presentations, and a Jetpack Compose host.
 
-Порт Swift-пакета `Router`: типизированные `RouteScreen`, `RouteSheet`, `RouteFullScreenCover`, аргументы маршрута, стек экранов, смена корня и закрытие модальных окон. Android-аналог `RouterView` реализован на Jetpack Compose.
+[Platform comparison](../README.md). Open this `kotlin/` directory in Android Studio and run commands from here.
 
-Модули:
+## Installation
 
-- `router` — JVM JAR: маршруты, `RouterProtocol`, потокобезопасный `Router` и состояние в `StateFlow`.
-- `router-compose` — Android AAR: `RouterView`, `RouterBuilderProtocol`, `LocalRouter`, `currentRouter` и `rememberRouter`.
-- `sample` — запускаемое Android-приложение с профилями, sheet и полноэкранным login.
+Modules:
 
-## Сборка и подключение
+- `router`: JVM navigation model, route types, `RouterProtocol`, and state exposed as `StateFlow`.
+- `router-compose`: Android AAR containing `RouterView`, `RouterBuilderProtocol`, `LocalRouter`, `currentRouter`, and `rememberRouter`.
+- `sample`: Android app demonstrating profiles, a filter sheet, and full-screen login.
 
-JDK 17, Android SDK 36, Build Tools 35.0.0, Android API 23+. Версии: Gradle 8.13, AGP 8.11.1, Kotlin 2.2.21, Compose BOM 2025.09.01. SDK задайте через `ANDROID_HOME` или исключённый из Git файл `local.properties` (`sdk.dir=/path/to/Android/sdk`).
+Requirements: JDK 17, Android SDK 36, Build Tools 35.0.0, and Android API 23+. The project uses Gradle 8.13, AGP 8.11.1, Kotlin 2.2.21, and Compose BOM 2025.09.01. Set the SDK through `ANDROID_HOME` or an ignored `local.properties` file containing `sdk.dir=/path/to/Android/sdk`.
 
 ```sh
 ./gradlew test assembleDebug lintDebug publishToMavenLocal
 ```
 
-В settings Android-проекта добавьте `mavenLocal()` в `dependencyResolutionManagement.repositories`, сохранив `google()` и `mavenCentral()`:
+Add `mavenLocal()` to your application's repositories, alongside `google()` and `mavenCentral()`:
 
 ```kotlin
 dependencies {
     implementation("io.ivangalkindeveloper:router-compose:1.0.0")
-    // router подключается транзитивно.
+    // The router model is included transitively.
 }
 ```
 
-В приложении должны быть включены `buildFeatures { compose = true }` и Kotlin Compose compiler plugin той же версии, что и Kotlin. Для использования модели без Compose достаточно зависимости `io.ivangalkindeveloper:router:1.0.0`.
+Enable `buildFeatures { compose = true }` and the Kotlin Compose compiler plugin matching your Kotlin version. To use the model without Compose, depend on `io.ivangalkindeveloper:router:1.0.0` instead.
 
-Исходники можно подключить через `includeBuild("/absolute/path/to/Router/kotlin")` вместо локальной публикации, сохранив эти строки зависимостей.
+Source integration is available through `includeBuild("/absolute/path/to/Router/kotlin")` in the application's `settings.gradle.kts`, using the same coordinates. Remote Maven publishing requires separate repository and credential configuration.
 
-## Маршруты
+## Routes
 
 ```kotlin
+import io.ivangalkindeveloper.router.*
+
 enum class Screen { HOME, PROFILE }
 enum class Sheet { FILTERS }
 enum class FullScreen { LOGIN }
@@ -50,11 +52,20 @@ router.popRoot()
 router.root(RouteScreen(Screen.HOME))
 ```
 
-Типы `Screen`, `Sheet`, `FullScreenCover` должны иметь корректные, стабильные в течение жизни объекта `equals`/`hashCode`; обычно это `enum` или неизменяемые data classes. Аргументы реализуют маркер `RouteArgumentsProtocol`.
+Use enums or immutable data classes with stable `equals` and `hashCode` for route types. Arguments implement the marker interface `RouteArgumentsProtocol`.
 
-## Compose
+`root(route)` replaces the root while retaining the path and presentations. Call `popRoot()` and the dismiss methods for a full reset. Calling `pop()` on an empty stack safely does nothing.
+
+## Compose host
 
 ```kotlin
+import androidx.compose.runtime.Composable
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import io.ivangalkindeveloper.router.*
+import io.ivangalkindeveloper.router.compose.*
+
 class Builder : RouterBuilderProtocol<Screen, Sheet, FullScreen> {
     @Composable override fun build(route: RouteScreen<Screen>) {
         val router = currentRouter<Screen, Sheet, FullScreen>()
@@ -78,38 +89,26 @@ class Builder : RouterBuilderProtocol<Screen, Sheet, FullScreen> {
 }
 ```
 
-Храните `Router` в Android `ViewModel`, чтобы стек переживал пересоздание Activity; работающий пример есть в `sample`. Для простых сценариев существует `RouterView(builder = Builder(), initialRouteScreen = RouteScreen(Screen.HOME))`, который создаёт router через `remember`.
+Keep the router in a `ViewModel` to retain navigation across Activity recreation; see `sample`. `RouterView(builder = Builder(), initialRouteScreen = RouteScreen(Screen.HOME))` creates a remembered router for simpler lifetimes.
 
-`currentRouter` — аналог SwiftUI `environmentObject`; параметры типов должны совпадать с ближайшим `RouterView`. Вложенные hosts получают собственный router. `LocalRouter.current` позволяет получить интерфейс без приведения к конкретным типам.
+The type arguments of `currentRouter` must match the nearest host. Nested hosts supply their own router. `LocalRouter.current` exposes the interface without specifying route type arguments.
 
-## Поведение и отличия от Swift
+## State and presentation behavior
 
-| Swift | Android |
-|---|---|
-| `NavigationPath` | `state.value.path` и уникальные `screenEntries` |
-| `ObservableObject` / `@Published` | Один согласованный `StateFlow<RouterState<...>>` |
-| `.sheet` | Material 3 `ModalBottomSheet` |
-| `.fullScreenCover` | Полноэкранный Compose `Dialog` |
-| `environmentObject(router)` | `LocalRouter` / `currentRouter` |
+Route equality includes presentation kind, type, and ID, but not arguments. `id == type.hashCode()` is not a persistent identifier. Each push has a separate `RouteEntry.key`, including repeated identical routes, so each screen retains independent `rememberSaveable` state. Reopening a modal updates its arguments and state.
 
-Как в исходнике, `root(route)` заменяет корневой экран, сохраняя path и модальные окна. Для полного сброса вызовите также `popRoot()` и нужные методы dismiss. `pop()` на пустом стеке безопасно ничего не делает.
+Back closes the full-screen presentation first, then the sheet, then the top screen. At the root it is passed to the Activity. Modal animations are provided by Compose. Screen transition animations and predictive back are not implemented.
 
-Equality маршрута учитывает вид представления, `type` и `id`, но не аргументы. `id == type.hashCode()`, поэтому это не идентификатор для долговременного хранения. Каждый push имеет отдельный `RouteEntry.key`, даже для двух одинаковых маршрутов; это сохраняет независимость `rememberSaveable` на экранах. Повторное открытие модального окна также обновляет его аргументы и состояние.
+`RouterView` retains previous screens' `rememberSaveable` state; ordinary `remember` state is recreated on return. State updates are atomic, and previously exposed snapshots and collections are not mutated. Use immutable route types and arguments.
 
-Android Back закрывает полноэкранное окно, затем sheet, затем верхний экран. На корневом экране Back передаётся Activity. Стандартные анимации модальных окон предоставляет Compose; анимации переходов между экранами и predictive back в этом порте не реализованы. `RouterView` сохраняет `rememberSaveable` предыдущих экранов, а обычный `remember` заново создаётся при возврате.
+A `ViewModel` handles configuration changes. Restoring navigation after process death requires your own serialization and reconstruction, for example with `SavedStateHandle`. A remembered router lives only as long as its composition.
 
-Все изменения состояния атомарны, старые snapshots и коллекции не изменяются. Аргументы и значения типов маршрутов остаются объектами приложения, поэтому используйте неизменяемые модели.
+## Example and checks
 
-ViewModel сохраняет модель при изменениях конфигурации. Восстановление стека после смерти процесса не автоматическое: для произвольных типов и аргументов приложение должно определить их сериализацию и восстановить модель через `SavedStateHandle` или собственное хранилище. Вариант с `remember` живёт только до удаления composition.
+Run the `sample` module from Android Studio, or build its APK:
 
-## Пример и проверки
+```sh
+./gradlew :sample:assembleDebug
+```
 
-Откройте этот каталог в Android Studio и запустите модуль `sample`. Сборка APK: `./gradlew :sample:assembleDebug`; файл находится в `sample/build/outputs/apk/debug/`.
-
-Тесты JVM проверяют операции со стеком, аргументы, equality, дубликаты, неизменяемость snapshots и одновременные push. Compose-тесты на Robolectric проверяют сохранение состояния экрана, повторные маршруты и показ/закрытие обоих типов модальных окон. GitHub Actions выполняет сборку, тесты и Android Lint.
-
-## Репозиторий и публикация
-
-Swift- и Kotlin-реализации размещаются в одном репозитории; Git-команды выполняйте из его корня. Общие GitHub Actions находятся в `../.github/`.
-
-Maven-публикации настроены для `publishToMavenLocal`. Адрес и credentials удалённого Maven-репозитория настраиваются отдельно.
+The APK is in `sample/build/outputs/apk/debug/`. JVM tests cover stack operations, arguments, equality, duplicate entries, snapshots, and concurrent pushes. Robolectric Compose tests cover retained screen state, repeated routes, and both presentation types.
